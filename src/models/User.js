@@ -35,17 +35,17 @@ const userSchema = mongoose.Schema({
 
 });
 userSchema.pre('save', function (next) {
-    if (this.isModified()) {
-        bcript.genSalt(SALT_NUM, (err, salt) => {
-            console.log(this);
+    const user = this;
+    if (user.isModified('password')) {
+        bcript.genSalt(SALT_NUM, function (err, salt) {
             if (err) {
                 return next(err)
             }
-            bcript.hash(this.password, salt, (err, hash) => {
+            bcript.hash(user.password, salt, function (err, hash) {
                 if (err) {
                     return next(err)
                 }
-                this.password = hash;
+                user.password = hash;
                 next()
             });
         })
@@ -53,20 +53,30 @@ userSchema.pre('save', function (next) {
 });
 
 userSchema.methods.comparePassword = function (password, callback) {
-    bcript.compare(password, this.password, (err, isMatch) => {
+    const user = this;
+    bcript.compare(password, user.password, function (err, isMatch) {
         if (err) return callback(err);
         return callback(null, isMatch);
     });
 };
 userSchema.methods.generateToken = function (callback) {
-    const token  = jwt.sign(this._id.toHexString(),process.env.SECRET);
+    const token = jwt.sign(this._id.toHexString(), process.env.SECRET);
     this.token = token;
-    this.save((err,user)=>{
-        if (err){return callback(err)}
-        callback(null,user)
+    this.save((err, user) => {
+        if (err) {
+            return callback(err)
+        }
+        callback(null, user)
     })
 };
-
+userSchema.statics.findByToken = function (token, callback) {
+    jwt.verify(token, process.env.SECRET, function (err, decode) {
+        User.findOne({"_id": decode, "token": token}, (err, user) => {
+            if (err) return callback(err);
+            callback(null, user)
+        })
+    });
+};
 const User = mongoose.model('User', userSchema);
 
 module.exports = {User};
