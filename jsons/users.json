@@ -1,0 +1,9 @@
+{
+  "name": "admin",
+  "email": "anton.bogomil777@gmail.com",
+  "password": "123456",
+  "films": [
+    "Film 1",
+    "Film 2"
+  ]
+}

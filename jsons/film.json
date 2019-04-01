@@ -1,0 +1,11 @@
+[
+  {
+    "name": "The Shawshank Redemption",
+    "rating" : "9.3",
+    "year": "1991",
+    "description": "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
+    "img": "https://m.media-amazon.com/images/M/MV5BNDg2NjIxMDUyNF5BMl5BanBnXkFtZTgwMzEzNTE1NTM@._V1_UX182_CR0,0,182,268_AL_.jpg",
+    "country": ["5c9a2036bf1d170654051221","5c9a207cffc235272808aefd"],
+    "category": ["5c9a2154fed8bd2b2c925152","5c9a2174f7e2d20310f5d535"]
+  }
+]
