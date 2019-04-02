@@ -5,11 +5,12 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const port = process.env.PORT || 3002;
 require('dotenv').config();
-require('./config/db')();
-require('./routes')(app);
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(cookieParser());
+require('./config/db')();
+require('./routes')(app);
+
 app.listen(port, () => {
     console.log("Server is running on port : " + port + '...');
 });

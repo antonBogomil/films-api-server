@@ -4,16 +4,18 @@ const admin = require("../middleware/admin").admin;
 const router = express.Router();
 const {ROLE_ADMIN, COOKIE_TOKEN, ERRORS} = require("../constants");
 const {User} = require("../models/User");
-router.get('/auth', auth,(req, res) => {
-    res.status(200).json({
+router.get('/auth', auth, (req, res) => {
+    return res.json({
+        success: true,
         isAdmin: req.user.role === ROLE_ADMIN,
         isAuth: true,
         email: req.user.email,
         name: req.user.name
     })
 });
-router.post('/register', auth, admin, (req, res) => {
-    const user = new User(req.body.user);
+router.post('/register', (req, res) => {
+    const user = new User(req.body);
+
     user.save((err, doc) => {
         if (err) {
             return res.json({success: false, err})
@@ -21,7 +23,7 @@ router.post('/register', auth, admin, (req, res) => {
         res.status(200).json({success: true})
     });
 });
-router.get('/logout',auth, (req, res) => {
+router.get('/logout', auth, (req, res) => {
     User.findOneAndUpdate({_id: req.user._id}, {token: ''}, (err, doc) => {
         if (err) return res.json({err, success: false});
         return res.status(200).send({
