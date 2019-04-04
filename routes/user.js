@@ -18,6 +18,9 @@ router.post('/register', (req, res) => {
 
     user.save((err, doc) => {
         if (err) {
+            if (err.code===11000){
+                return res.json({success: false, exist:true})
+            }
             return res.json({success: false, err})
         }
         res.status(200).json({success: true})
