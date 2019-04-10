@@ -7,15 +7,16 @@ const {User} = require("../models/User");
 router.get('/auth', auth, (req, res) => {
     return res.json({
         success: true,
-        isAdmin: req.user.role === ROLE_ADMIN,
-        isAuth: true,
-        email: req.user.email,
-        name: req.user.name
+        user: {
+            isAdmin: req.user.role === ROLE_ADMIN,
+            email: req.user.email,
+            name: req.user.name,
+            image :req.user.image
+        }
     })
 });
 router.post('/register', (req, res) => {
     const user = new User(req.body);
-
     user.save((err, doc) => {
         if (err) {
             if (err.code===11000){
@@ -44,6 +45,12 @@ router.post('/login', (req, res) => {
                 if (err) return res.status(400).send(err);
                 res.cookie(COOKIE_TOKEN, user.token).status(200).json({
                     success: true,
+                    user: {
+                        name: user.name,
+                        email: user.email,
+                        isAdmin: user.role === ROLE_ADMIN,
+                        image : ''
+                    }
                 });
             })
         })
